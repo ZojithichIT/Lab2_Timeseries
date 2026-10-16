@@ -46,12 +46,12 @@ Lab2_TS/
 ├── scripts/
 │   └── main.ipynb                                  # Jupyter Notebook thực hành (Bài 1 -> Bài 5 & Nâng cao)
 └── docs/
-    ├── README.md                                   # Trang chủ tài liệu & chỉ mục (file này)
+    ├── README.md                                   # Trang chủ tài liệu & chỉ mục
     ├── 01_eda_and_adf_test.md                      # Tài liệu: EDA, Nhận diện chuỗi dừng & Kiểm định ADF
     ├── 02_differencing_and_identification.md       # Tài liệu: Sai phân (d, D) & Phân tích ACF/PACF (p, q)
     ├── 03_arima_modeling_and_diagnostics.md        # Tài liệu: Fit ARIMA, Chẩn đoán phần dư & Đánh giá (MAE/RMSE/MAPE)
     ├── 04_sarima_advanced.md                       # Tài liệu: Mô hình hóa SARIMA nâng cao & So sánh với ARIMA
-    ├── report.md                                   # Báo cáo tổng hợp hoàn chỉnh (Sẵn sàng xuất PDF)
+    ├── report.md                                   # Báo cáo tổng hợp hoàn chỉnh 
     └── images/                                     # Biểu đồ và hình ảnh minh họa cho báo cáo
 ```
 
@@ -59,17 +59,17 @@ Lab2_TS/
 
 ## 3. Danh Mục Nhiệm Vụ & Tài Liệu Dự Kiến
 
-* 📘 **01. Khám Phá Dữ Liệu & Kiểm Định ADF (EDA & Stationarity Test)**  
+*  **01. Khám Phá Dữ Liệu & Kiểm Định ADF (EDA & Stationarity Test)**  
   Load dữ liệu, chuyển date index, vẽ đồ thị chuỗi thời gian, kiểm tra xu hướng, mùa vụ, thực hiện và diễn giải kiểm định ADF trên chuỗi gốc ($H_0$, p-value, ADF statistic).
 
-* 📊 **02. Sai Phân & Nhận Diện Bậc Mô Hình (Differencing & Model Identification)**  
+*  **02. Sai Phân & Nhận Diện Bậc Mô Hình (Differencing & Model Identification)**  
   Sai phân bậc 1 ($d=1$), kiểm định ADF lại để xác nhận tính dừng. Khảo sát đồ thị ACF/PACF để xác định quy luật cắt cụt/suy giảm và đề xuất các bộ tham số $(p, d, q)$.
 
-* 📈 **03. Xây Dựng & Đánh Giá Mô Hình ARIMA (ARIMA Modeling & Residual Diagnostics)**  
+*  **03. Xây Dựng & Đánh Giá Mô Hình ARIMA (ARIMA Modeling & Residual Diagnostics)**  
   Chia Train (80%) / Test (20%) theo thứ tự thời gian. Ước lượng mô hình, so sánh AIC/BIC. Chẩn đoán phần dư (Residuals mean $\approx 0$, White Noise, ACF phần dư). Thực hiện dự báo và tính toán MAE, RMSE, MAPE.
 
-* ✈️ **04. Mô Hình Hóa Nâng Cao Với SARIMA (Advanced SARIMA on AirPassengers)**  
+*  **04. Mô Hình Hóa Nâng Cao Với SARIMA (Advanced SARIMA on AirPassengers)**  
   Nhận diện tính mùa vụ $s=12$, áp dụng kết hợp sai phân thường ($d=1$) và sai phân mùa vụ ($D=1$). Nhận diện $(p, d, q) \times (P, D, Q)_{12}$, fit SARIMA, dự báo và so sánh hiệu quả với ARIMA chuẩn.
 
-* 📑 **Báo Cáo Tổng Hợp (report.md)**  
+*  **Báo Cáo Tổng Hợp (report.md)**  
   Báo cáo học thuật toàn diện giải đáp đầy đủ các câu hỏi lý thuyết và thực nghiệm trong yêu cầu bài tập.
