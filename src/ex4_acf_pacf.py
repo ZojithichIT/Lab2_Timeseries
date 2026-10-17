@@ -1,4 +1,3 @@
-# src/ex4_acf_pacf.py
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
