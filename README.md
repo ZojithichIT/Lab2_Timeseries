@@ -69,12 +69,19 @@ Phương trình đa thức trễ của mô hình tự hồi quy tích hợp trun
 $$\phi_p(B)\Phi_P(B^s)(1 - B)^d(1 - B^s)^D Y_t = \theta_q(B)\Theta_Q(B^s)\varepsilon_t, \quad \varepsilon_t \sim \text{WN}(0, \sigma^2)$$
 
 ### 3. Chỉ số Đánh giá Sai số Dự báo (Out-of-Time Evaluation Metrics)
-3. Chỉ số Đánh giá Sai số Dự báo (Out-of-Time Evaluation Metrics)
 
-Trên tập kiểm thử gồm $n$ quan sát tương lai, chất lượng dự báo $\hat{Y}_t$ so với giá trị thực tế $Y_t$ được đo lường qua:
+Trên tập kiểm thử gồm $n$ quan sát tương lai, chất lượng dự báo $\hat{Y}_t$ so với giá trị thực tế $Y_t$ được đo lường qua các chỉ số sau:
 
 $$
-\text{MAE} = \frac{1}{n}\sum_{t=1}^{n} |Y_t - \hat{Y}_t|, \quad \text{RMSE} = \sqrt{\frac{1}{n}\sum_{t=1}^{n} (Y_t - \hat{Y}_t)^2}, \quad \text{MAPE} = \frac{100\%}{n}\sum_{t=1}^{n} \left|\frac{Y_t - \hat{Y}_t}{Y_t}\right|
+\mathrm{MAE} = \frac{1}{n}\sum_{t=1}^{n} \left|Y_t - \hat{Y}_t\right|
+$$
+
+$$
+\mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{t=1}^{n} \left(Y_t - \hat{Y}_t\right)^2}
+$$
+
+$$
+\mathrm{MAPE} = \frac{100\%}{n}\sum_{t=1}^{n} \left|\frac{Y_t - \hat{Y}_t}{Y_t}\right|
 $$
 ---
 
