@@ -69,6 +69,8 @@ Phương trình đa thức trễ của mô hình tự hồi quy tích hợp trun
 $$\phi_p(B)\Phi_P(B^s)(1 - B)^d(1 - B^s)^D Y_t = \theta_q(B)\Theta_Q(B^s)\varepsilon_t, \quad \varepsilon_t \sim \text{WN}(0, \sigma^2)$$
 
 ### 3. Chỉ số Đánh giá Sai số Dự báo (Out-of-Time Evaluation Metrics)
+3. Chỉ số Đánh giá Sai số Dự báo (Out-of-Time Evaluation Metrics)
+
 Trên tập kiểm thử gồm $n$ quan sát tương lai, chất lượng dự báo $\hat{Y}_t$ so với giá trị thực tế $Y_t$ được đo lường qua:
 
 $$
