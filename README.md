@@ -70,8 +70,10 @@ $$\phi_p(B)\Phi_P(B^s)(1 - B)^d(1 - B^s)^D Y_t = \theta_q(B)\Theta_Q(B^s)\vareps
 
 ### 3. Chỉ số Đánh giá Sai số Dự báo (Out-of-Time Evaluation Metrics)
 Trên tập kiểm thử gồm $n$ quan sát tương lai, chất lượng dự báo $\hat{Y}_t$ so với giá trị thực tế $Y_t$ được đo lường qua:
-$$\text{MAE} = \frac{1}{n}\sum_{t=1}^{n} |Y_t - \hat{Y}_t|, \quad \text{RMSE} = \sqrt{\frac{1}{n}\sum_{t=1}^{n} (Y_t - \hat{Y}_t)^2}, \quad \text{MAPE} = \frac{100\%}{n}\sum_{t=1}^{n} \left|\frac{Y_t - \hat{Y}_t}{Y_t}\right|$$
 
+$$
+\text{MAE} = \frac{1}{n}\sum_{t=1}^{n} |Y_t - \hat{Y}_t|, \quad \text{RMSE} = \sqrt{\frac{1}{n}\sum_{t=1}^{n} (Y_t - \hat{Y}_t)^2}, \quad \text{MAPE} = \frac{100\%}{n}\sum_{t=1}^{n} \left|\frac{Y_t - \hat{Y}_t}{Y_t}\right|
+$$
 ---
 
 ## 📊 Kết quả Thực nghiệm & Trực quan hóa (Experimental Results)
