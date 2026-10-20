@@ -66,25 +66,25 @@ Biểu đồ thực nghiệm của chuỗi sai phân bậc 1 $\Delta Y_t$ trên 
 
 ---
 
-### 3.3. Bảng định lượng hệ số ACF & PACF qua các độ trễ chính
+### 3.3. Bảng định lượng hệ số ACF & PACF qua các độ trễ chính (Chuỗi Logarit $\Delta \ln(Y_t)$)
 
 | Độ trễ ($k$) | Hệ số $\text{ACF}(k)$ | Đánh giá ACF (Ngưỡng $\pm 0.1376$) | Hệ số $\text{PACF}(k)$ | Đánh giá PACF (Ngưỡng $\pm 0.1376$) | Đặc trưng độ trễ |
 | :---: | :---: | :---: | :---: | :---: | :--- |
-| **1** | **-0.3651** | **★ Vượt ngưỡng (Có ý nghĩa)** | **-0.3651** | **★ Vượt ngưỡng (Có ý nghĩa)** | **Phi mùa vụ chính** |
-| **2** | **+0.0060** | ○ Nhiễu trắng (Không ý nghĩa) | **-0.1470** | **★ Vượt ngưỡng (Có ý nghĩa)** | **Phi mùa vụ chính** |
-| **3** | -0.1033 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1822 | ★ Vượt ngưỡng (Có ý nghĩa) | Phi mùa vụ ngắn hạn |
-| **4** | -0.0170 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1564 | ★ Vượt ngưỡng (Có ý nghĩa) | Phi mùa vụ ngắn hạn |
-| **5** | +0.0311 | ○ Nhiễu trắng (Không ý nghĩa) | -0.0740 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
-| **6** | -0.0491 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1164 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
-| **7** | +0.0095 | ○ Nhiễu trắng (Không ý nghĩa) | -0.0962 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
-| **8** | -0.0104 | ○ Nhiễu trắng (Không ý nghĩa) | -0.0845 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
-| **9** | -0.1248 | ○ Nhiễu trắng (Không ý nghĩa) | -0.2435 | ★ Vượt ngưỡng (Có ý nghĩa) | Nhiễu mùa vụ |
-| **10** | +0.0296 | ○ Nhiễu trắng (Không ý nghĩa) | -0.2200 | ★ Vượt ngưỡng (Có ý nghĩa) | Nhiễu mùa vụ |
-| **11** | -0.2863 | ★ Vượt ngưỡng (Có ý nghĩa) | -0.6340 | ★ Vượt ngưỡng (Có ý nghĩa) | Mùa vụ cận biên ($s-1$) |
-| **12** | **+0.7569** | **★ Vượt ngưỡng CỰC LỚN** | **+0.4332** | **★ Vượt ngưỡng CỰC LỚN** | **Mùa vụ năm 1 ($s=12$)** |
-| **13** | -0.2322 | ★ Vượt ngưỡng (Có ý nghĩa) | +0.2596 | ★ Vượt ngưỡng (Có ý nghĩa) | Mùa vụ cận biên ($s+1$) |
-| **24** | **+0.6152** | **★ Vượt ngưỡng CỰC LỚN** | +0.0453 | ○ Nhiễu trắng (Không ý nghĩa) | **Mùa vụ năm 2 ($s=24$)** |
-| **36** | **+0.5395** | **★ Vượt ngưỡng CỰC LỚN** | +0.0729 | ○ Nhiễu trắng (Không ý nghĩa) | **Mùa vụ năm 3 ($s=36$)** |
+| **1** | **-0.3075** | **★ Vượt ngưỡng (Có ý nghĩa)** | **-0.3075** | **★ Vượt ngưỡng (Có ý nghĩa)** | **Cắt cụt ACF ($q=1$), PACF chi phối ($p=1$)** |
+| **2** | -0.0833 | ○ Nhiễu trắng (Không ý nghĩa) | **-0.1965** | **★ Vượt ngưỡng (Có ý nghĩa)** | PACF tắt dần (decay) |
+| **3** | -0.0591 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1725 | ★ Vượt ngưỡng (Có ý nghĩa) | PACF tắt dần (decay) |
+| **4** | -0.0444 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1691 | ★ Vượt ngưỡng (Có ý nghĩa) | PACF tắt dần (decay) |
+| **5** | -0.0014 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1347 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
+| **6** | +0.0070 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1063 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
+| **7** | -0.0159 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1136 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
+| **8** | -0.0214 | ○ Nhiễu trắng (Không ý nghĩa) | -0.1291 | ○ Nhiễu trắng (Không ý nghĩa) | Phi mùa vụ ngắn hạn |
+| **9** | -0.0670 | ○ Nhiễu trắng (Không ý nghĩa) | -0.2076 | ★ Vượt ngưỡng (Có ý nghĩa) | Tương tác mùa vụ ($s-3$) |
+| **10** | -0.0874 | ○ Nhiễu trắng (Không ý nghĩa) | -0.3342 | ★ Vượt ngưỡng (Có ý nghĩa) | Tương tác mùa vụ ($s-2$) |
+| **11** | -0.2201 | ★ Vượt ngưỡng (Có ý nghĩa) | -0.7561 | ★ Vượt ngưỡng (Có ý nghĩa) | Tương tác mùa vụ ($s-1$) |
+| **12** | **+0.8203** | **★ Vượt ngưỡng CỰC LỚN** | **+0.3905** | **★ Vượt ngưỡng CỰC LỚN** | **ĐỈNH MÙA VỤ NĂM 1 ($s=12$)** |
+| **13** | -0.2370 | ★ Vượt ngưỡng (Có ý nghĩa) | +0.2057 | ★ Vượt ngưỡng (Có ý nghĩa) | Tương tác mùa vụ ($s+1$) |
+| **24** | **+0.6989** | **★ Vượt ngưỡng CỰC LỚN** | -0.0270 | ○ Nhiễu trắng (Không ý nghĩa) | **ĐỈNH MÙA VỤ NĂM 2 ($s=24$)** |
+| **36** | **+0.6374** | **★ Vượt ngưỡng CỰC LỚN** | +0.0252 | ○ Nhiễu trắng (Không ý nghĩa) | **ĐỈNH MÙA VỤ NĂM 3 ($s=36$)** |
 
 ---
 
@@ -93,54 +93,48 @@ Biểu đồ thực nghiệm của chuỗi sai phân bậc 1 $\Delta Y_t$ trên 
 ### Câu hỏi 1: ACF cắt cụt ở lag nào?
 * **Kết luận:** Xét trong miền độ trễ phi mùa vụ (Non-seasonal domain, các độ trễ ngắn hạn từ 1 đến 10), **ACF cắt cụt (cut-off) rõ rệt ngay sau Lag 1**.
 * **Minh chứng định lượng:**
-  * Tại **Lag 1**: Hệ số tự tương quan $\text{ACF}(1) = -0.3651$, có ý nghĩa thống kê cao vượt ra ngoài dải tin cậy 95% ($[-0.1376, +0.1376]$).
-  * Tại **Lag 2**: Hệ số giảm đột ngột về $\text{ACF}(2) = +0.0060$ (gần như bằng 0) và nằm trọn trong dải bóng mờ của nhiễu trắng.
+  * Tại **Lag 1**: Hệ số tự tương quan $\text{ACF}(1) = -0.3075$, có ý nghĩa thống kê cao vượt ra ngoài dải tin cậy 95% ($[-0.1376, +0.1376]$).
+  * Tại **Lag 2**: Hệ số giảm đột ngột về $\text{ACF}(2) = -0.0833$ và nằm trọn trong dải bóng mờ của nhiễu trắng.
   * Các độ trễ tiếp theo từ Lag 3 đến Lag 10 đều nằm trong dải tin cậy và không có ý nghĩa thống kê.
 * **Gợi ý tham số:** Hiện tượng một xung nhọn tại Lag 1 rồi cắt cụt ngay lập tức là đặc trưng kinh điển của quá trình **Trung bình trượt bậc 1: $\text{MA}(1)$**, tức **$q = 1$**.
-* **Đặc trưng mùa vụ:** Tại các bội số của chu kỳ 12 tháng ($\text{ACF}(12) = 0.7569, \text{ACF}(24) = 0.6152, \text{ACF}(36) = 0.5395$), các hệ số dương rất lớn suy giảm chậm, phản ánh tính chất mùa vụ hàng năm chưa được khử bỏ hoàn toàn nếu chỉ dùng sai phân thường.
+* **Đặc trưng mùa vụ:** Tại các bội số của chu kỳ 12 tháng ($\text{ACF}(12) = 0.8203, \text{ACF}(24) = 0.6989, \text{ACF}(36) = 0.6374$), các hệ số dương rất lớn suy giảm chậm, phản ánh tính chất mùa vụ hàng năm chưa được khử bỏ hoàn toàn nếu chỉ dùng sai phân thường $\implies$ Tiền đề xây dựng mô hình $\text{SARIMA}$ ở Bài 5.
 
 ---
 
 ### Câu hỏi 2: PACF cắt cụt ở lag nào?
-* **Kết luận:** Trong miền phi mùa vụ, **PACF có dạng suy giảm dần (tắt dần hình học) hoặc cắt cụt sau Lag 1 đến Lag 2**.
+* **Kết luận:** Trong miền phi mùa vụ, **PACF có dạng suy giảm dần (tắt dần / decay) sau Lag 1**.
 * **Minh chứng định lượng:**
-  * Tại **Lag 1**: $\text{PACF}(1) = -0.3651$ (vượt ngưỡng âm $-0.1376$, có ý nghĩa rất cao).
-  * Tại **Lag 2**: $\text{PACF}(2) = -0.1470$ (chớm vượt ngưỡng $-0.1376$).
-  * Tại **Lag 3, Lag 4**: Các hệ số dao động nhỏ quanh biên và tắt dần; các lag 5 đến 8 rơi vào dải nhiễu trắng.
+  * Tại **Lag 1**: $\text{PACF}(1) = -0.3075$ (vượt ngưỡng âm $-0.1376$, có ý nghĩa rất cao).
+  * Tại **Lag 2, 3, 4**: Các hệ số tiếp tục mang dấu âm nhưng giảm dần về biên độ ($\text{PACF}(2) = -0.1965, \text{PACF}(3) = -0.1725, \text{PACF}(4) = -0.1691$), tiệm cận quanh đường giới hạn tin cậy.
+  * Các lag 5 đến 8 triệt tiêu hoàn toàn vào dải nhiễu trắng ($\text{PACF}(5) = -0.1347, \text{PACF}(6) = -0.1063, \dots$).
+  * Tại các lag 9, 10, 11, PACF tăng âm trở lại do hiệu ứng cộng hưởng mùa vụ trước đỉnh chu kỳ 12 tháng.
 * **Gợi ý tham số:**
-  * Nếu nhận định PACF cắt cụt: Đề xuất bậc tự hồi quy **$p = 1$ hoặc $p = 2$**.
-  * Nếu nhận định theo tính chất phối hợp lý thuyết: Khi chuỗi là quá trình $\text{MA}(1)$, ACF sẽ cắt cụt tại lag 1 còn PACF sẽ suy giảm tắt dần. Cả hai cách tiếp cận đều chỉ ra cấu hình **$p \in \{1, 2\}$** là tối ưu nhất.
+  * Tính chất PACF tắt dần và ACF cắt cụt tại lag 1 củng cố mô hình có thành phần tự hồi quy gọn nhẹ **$p = 1$** (hoặc $p = 0$ nếu xem toàn bộ sự tắt dần là do quá trình $\text{MA}(1)$ thuần).
 
 ---
 
 ### Câu hỏi 3: Gợi ý mô hình $\text{ARIMA}(p, d, q)$?
-* **Tổng hợp bộ tham số tối ưu:**
-  * Bậc sai phân thường: **$d = 1$** (từ kết quả Bài 3).
-  * Bậc tự hồi quy: **$p \in \{1, 2\}$** (từ khảo sát PACF Bài 4).
-  * Bậc trung bình trượt: **$q \in \{1\}$** (từ khảo sát cắt cụt của ACF Bài 4).
+* **Bộ tham số đề xuất chính thức:**
+  $$\mathbf{ARIMA(1, 1, 1)} \quad \text{trên chuỗi Logarit } \ln(Y_t)$$
+  *(Mô hình đối sánh phụ: $\text{ARIMA}(0, 1, 1)$ và $\text{ARIMA}(0, 1, 2)$)*.
 
-* **Danh sách các mô hình ứng viên tiềm năng:**
-  1. **$\text{ARIMA}(1, 1, 1)$ – Mô hình khuyến nghị ưu tiên hàng đầu (Primary Candidate):**
-     * Cân bằng hoàn hảo giữa bậc trễ $\text{AR}(1)$ và $\text{MA}(1)$.
-     * Tuân thủ **Nguyên lý Tiết kiệm Tham số (Parsimony Principle)** của Box–Jenkins, tránh hiện tượng quá khớp dữ liệu (Overfitting).
-     * Đạt tiêu chuẩn thông tin tối ưu: $\text{AIC} = 855.52$, $\text{BIC} = 865.46$.
-  2. **$\text{ARIMA}(2, 1, 1)$ – Mô hình đối sánh mở rộng (Secondary Candidate):**
-     * Bổ sung bậc $\text{AR}(2)$ để bắt thêm tương quan riêng phần tại lag 2 ($\text{AIC} = 856.87$).
-  3. **$\text{ARIMA}(0, 1, 1)$ – Mô hình IMA(1,1) thuần túy:**
-     * Tương đương với phương pháp làm mịn hàm mũ đơn giản (Simple Exponential Smoothing), phù hợp với quy tắc chỉ giữ $\text{MA}(1)$ ($\text{AIC} = 864.28$).
-  4. **$\text{ARIMA}(2, 1, 2)$ – Mô hình bậc cao đối sánh:**
-     * Đạt $\text{AIC} = 848.00$, phản ánh khả năng khớp dữ liệu tốt hơn nhưng đánh đổi bằng việc tăng số lượng tham số ước lượng.
+* **Lập luận bảo vệ mô hình đề xuất:**
+  1. **Quy tắc Box–Jenkins:** $d = 1$ (chuỗi dừng sau sai phân bậc 1 trên nền log, ADF $p = 0.00018$), $q = 1$ (ACF cắt cụt sau lag 1), $p = 1$ (PACF chi phối mạnh nhất ở lag 1).
+  2. **Tiêu chuẩn thông tin thực nghiệm (AIC/BIC):**
+     * Trong các cấu hình gọn nhẹ, $\text{ARIMA}(1, 1, 1)$ đạt $\text{AIC} = -159.66$ và $\text{BIC} = -149.72$ tối ưu vượt trội.
+     * Mô hình bậc cao $\text{ARIMA}(3, 1, 2)$ bị cảnh báo **ConvergenceWarning** (không hội tụ) và quá nhiều tham số (5 tham số) vi phạm **Nguyên lý Tiết kiệm Tham số (Principle of Parsimony)**.
 
-#### Bảng Kiểm Chứng Thực Nghiệm AIC / BIC Giữa Các Mô Hình Ứng Viên:
+#### Bảng Kiểm Chứng Thực Nghiệm AIC / BIC Giữa Các Mô Hình Ứng Viên (Chuỗi Logarit):
 
-| Mô hình | Bậc $(p, d, q)$ | AIC | BIC | Log-Likelihood | Đánh giá chuyên môn |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **$\text{ARIMA}(1, 1, 1)$** | **$(1, 1, 1)$** | **855.52** | **865.46** | **-424.76** | **Tối ưu tiết kiệm tham số (Khuyến nghị số 1)** |
-| $\text{ARIMA}(2, 1, 1)$ | $(2, 1, 1)$ | 856.87 | 870.12 | -424.43 | Khả thi, bổ sung quán tính bậc 2 |
-| $\text{ARIMA}(0, 1, 1)$ | $(0, 1, 1)$ | 864.28 | 870.91 | -430.14 | Khả thi, mô hình IMA(1,1) kinh điển |
-| $\text{ARIMA}(1, 1, 2)$ | $(1, 1, 2)$ | 857.14 | 870.39 | -424.57 | Khả thi |
-| $\text{ARIMA}(2, 1, 2)$ | $(2, 1, 2)$ | 848.00 | 864.57 | -419.00 | Khớp dữ liệu tốt bậc cao |
-| **$\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$** | **$(1, 1, 1) \times (1, 1, 1)_{12}$** | **527.12** | **543.38** | **-258.56** | **Vượt trội toàn diện (Bắt trọn chu kỳ mùa vụ $s=12$)** |
+| Mô hình | Bậc $(p, d, q)$ | Số tham số | AIC | BIC | Log-Likelihood | Đánh giá chuyên môn |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **$\text{ARIMA}(1, 1, 1)$** | **$(1, 1, 1)$** | **2** | **-159.66** | **-149.72** | **82.83** | **Tối ưu tiết kiệm tham số (Khuyến nghị số 1)** |
+| $\text{ARIMA}(0, 1, 2)$ | $(0, 1, 2)$ | 2 | -158.04 | -148.10 | 82.02 | Khả thi, mô hình MA bậc 2 |
+| $\text{ARIMA}(2, 1, 1)$ | $(2, 1, 1)$ | 3 | -157.71 | -144.46 | 82.86 | Khả thi |
+| $\text{ARIMA}(1, 1, 2)$ | $(1, 1, 2)$ | 3 | -157.70 | -144.45 | 82.85 | Khả thi |
+| $\text{ARIMA}(0, 1, 1)$ | $(0, 1, 1)$ | 1 | -146.82 | -140.19 | 75.41 | Khả thi, mô hình IMA(1,1) đơn giản |
+| $\text{ARIMA}(1, 1, 0)$ | $(1, 1, 0)$ | 1 | -131.93 | -125.31 | 67.97 | Kém hơn các mô hình có MA(1) |
+| $\text{ARIMA}(3, 1, 2)$ | $(3, 1, 2)$ | 5 | -189.37 | -169.49 | 100.69 | Bị cảnh báo không hội tụ (Convergence Warning), overfitting |
 
 ---
 
@@ -149,4 +143,4 @@ Biểu đồ thực nghiệm của chuỗi sai phân bậc 1 $\Delta Y_t$ trên 
 Kết quả phân tích ACF và PACF tại Bài 4 cung cấp một phát hiện mang tính quyết định:
 * Các mô hình $\text{ARIMA}(p, 1, q)$ phi mùa vụ thuần túy **chỉ xử lý được tương quan ngắn hạn giữa các tháng kề nhau**, nhưng hoàn toàn bất lực trước tương quan chu kỳ 12 tháng (thể hiện qua các đỉnh cực lớn tại lag 12, 24, 36).
 * Khi kiểm định phần dư của các mô hình $\text{ARIMA}(1, 1, 1)$ phi mùa vụ, phần dư chắc chắn sẽ vi phạm giả định Nhiễu trắng (White Noise) do tồn tại tự tương quan mùa vụ.
-* Vì vậy, để tối ưu hóa độ chính xác dự báo trong Bài 5, bước mở rộng bắt buộc là xây dựng mô hình **$\text{SARIMA}(p, 1, q) \times (P, D, Q)_{12}$** (với $D = 1, P \in \{0, 1\}, Q \in \{0, 1\}$). Mô hình này giúp chỉ số $\text{AIC}$ giảm mạnh từ $855.52$ xuống còn $527.12$, cải thiện triệt để chất lượng dự báo chuỗi thời gian.
+* Vì vậy, để tối ưu hóa độ chính xác dự báo trong Bài 5, bước mở rộng bắt buộc là xây dựng mô hình **$\text{SARIMA}(p, 1, q) \times (P, D, Q)_{12}$** (với $D = 1, P \in \{0, 1\}, Q \in \{0, 1\}$). Mô hình này giúp chỉ số $\text{AIC}$ giảm sâu vượt bậc, xử lý triệt để tính mùa vụ của chuỗi thời gian.
