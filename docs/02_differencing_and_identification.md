@@ -27,11 +27,19 @@ $$\Delta Y_t = (1 - B)Y_t = Y_t - Y_{t-1}$$
 trong đó $B$ là toán tử lùi (Backshift Operator: $B^k Y_t = Y_{t-k}$).
 
 ### 2.2. Kết quả kiểm định ADF sau sai phân bậc 1
-* **Chuỗi gốc $Y_t$ (Bài 2):** $\text{ADF Statistic} = +3.1452$, $\text{p-value} = 1.0000 \ge 0.05 \implies$ Chấp nhận $H_0$, chuỗi **không dừng**.
-* **Chuỗi sai phân bậc 1 $\Delta Y_t$ (Bài 3):**
-  * Với kiểm định ngắn hạn / chuỗi ổn định: $\text{p-value} < 0.05$, $\text{ADF Statistic} < \text{Critical Value (5\%)}$.
-  * Xu hướng dốc lên bị triệt tiêu hoàn toàn, đường **Rolling Mean (12 tháng)** nằm ngang bám sát trục $\mu = 0$.
-  * Bậc tích hợp được xác định là: **$d = 1$**.
+Bảng đối sánh kiểm định nghiệm đơn vị Augmented Dickey-Fuller (ADF) trên các chuỗi:
+
+| Chuỗi dữ liệu | Bậc sai phân ($d$) | ADF Statistic | p-value | Số độ trễ (Lags) | Ngưỡng 5% | Kết luận ($\alpha = 0.05$) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Chuỗi gốc $Y_t$ (Bài 2)** | 0 | +3.1452 | 1.000000 | 15 | -2.8770 | Chưa đủ cơ sở bác bỏ $H_0 \implies$ **Không dừng** |
+| **Chuỗi sai phân thường $\Delta Y_t$ (Bài 3)** | 1 | -2.4952 | 0.116653 | 15 | -2.8771 | Chưa đủ cơ sở bác bỏ $H_0$ (Do phương sai mở rộng & mùa vụ 12 tháng) |
+| **Chuỗi sai phân Logarit $\Delta \ln(Y_t)$ (Bài 3)** | 1 | **-4.5194** | **0.000181** | 13 | -2.8770 | Bác bỏ $H_0 \implies$ **ĐÃ DỪNG HOÀN TOÀN (Stationary)** |
+
+* **Đặc trưng trực quan:**
+  * Xu hướng tăng trưởng dài hạn bị triệt tiêu hoàn toàn, đường **Rolling Mean (12 tháng)** nằm ngang bám sát trục cân bằng $\mu = 0$ ($E \approx 0$).
+  * Đối với chuỗi sai phân thường $\Delta Y_t$, dải biên độ $\pm 2$ `Rolling Std` phình to dần (hiện tượng phương sai thay đổi - Heteroscedasticity).
+  * Đối với chuỗi sai phân logarit $\Delta \ln(Y_t)$, phương sai được bình ổn hoàn toàn và kiểm định ADF đạt $p\text{-value} = 0.00018 < 0.05$.
+* **Bậc tích hợp xác định:** **$d = 1$**.
 
 ![Chuỗi sai phân bậc 1](images/03_diff1_plot_a10.png)
 
