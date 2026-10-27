@@ -45,8 +45,8 @@ Trong đó:
 
 ### Bước 4: Lược đồ ACF & PACF xác định bộ tham số
 Trên chuỗi sai phân kép $\Delta \Delta_{12} Y_t$:
-* **Miền phi mùa vụ (lag 1 - 3):** ACF có 1 gai âm tại lag 1 rồi cắt cụt $\implies q = 1$. PACF suy giảm dần $\implies p \in \{0, 1\}$.
-* **Miền mùa vụ ($s=12$):** ACF có 1 gai âm có ý nghĩa tại lag 12 rồi cắt cụt $\implies Q = 1$. PACF có gai âm tại lag 12 $\implies P \in \{0, 1\}$.
+* **Miền phi mùa vụ (lag 1 - 3):** ACF có 1 gai âm vượt dải tin cậy tại lag 1 ($\hat{\rho}_1 = -0.31$) rồi cắt cụt $\implies q = 1$. PACF suy giảm $\implies p \in \{0, 1\}$.
+* **Miền mùa vụ ($s=12$):** ACF có gai âm tại lag 12 ($\hat{\rho}_{12} = -0.134$, nằm sát mép dải tin cậy do chuỗi gốc chưa lấy Logarit làm giảm biên độ tương quan, sau đó triệt tiêu ở lag 24, 36) $\implies$ Kết hợp lý thuyết Airline kinh điển (với chuỗi log đạt $\hat{\rho}_{12} \approx -0.39$) xác định $Q = 1$. PACF tại lag 12 âm nhẹ $\implies P \in \{0, 1\}$.
 * **Mô hình đề xuất:**
   * Mô hình Airline kinh điển của Box-Jenkins: **$\text{SARIMA}(0, 1, 1) \times (0, 1, 1)_{12}$**.
   * Mô hình đầy đủ: **$\text{SARIMA}(1, 1, 1) \times (1, 1, 1)_{12}$**.
