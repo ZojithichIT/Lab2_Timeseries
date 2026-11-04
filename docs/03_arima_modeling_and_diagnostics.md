@@ -28,10 +28,8 @@ Dựa trên kết quả định danh ở Bài 4 ($d = 1$, $p \in \{1, 2\}$, $q \
 | Tên mô hình | Thang đo dữ liệu | Cấu hình $(p, d, q) \times (P, D, Q)_s$ | AIC | BIC | Log-Likelihood | Trạng thái hội tụ |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **$\text{ARIMA}(1, 1, 1)$ (Log - Option B)** | $\ln(Y_t)$ | $(1, 1, 1)$ | **-131.05** | **-121.79** | **68.52** | Đạt hội tụ (`True`) |
-| $\text{ARIMA}(2, 1, 1)$ (Log) | $\ln(Y_t)$ | $(2, 1, 1)$ | -129.53 | -117.18 | 68.76 | Đạt hội tụ (`True`) |
 | $\text{ARIMA}(0, 1, 1)$ (Log) | $\ln(Y_t)$ | $(0, 1, 1)$ | -120.45 | -114.27 | 62.22 | Đạt hội tụ (`True`) |
 | **$\text{ARIMA}(1, 1, 1)$ (Raw)** | $Y_t$ | $(1, 1, 1)$ | 582.47 | 591.73 | -288.24 | Đạt hội tụ (`True`) |
-| $\text{ARIMA}(2, 1, 1)$ (Raw) | $Y_t$ | $(2, 1, 1)$ | 584.46 | 596.81 | -288.23 | Đạt hội tụ (`True`) |
 | **$\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$** | $Y_t$ | $(1, 1, 1) \times (1, 1, 1)_{12}$ | **245.41** | **260.46** | **-117.70** | Đạt hội tụ (`True`) |
 
 ---
@@ -52,7 +50,6 @@ $$e_t = Y_t - \hat{Y}_t$$
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **$\text{ARIMA}(1, 1, 1)$ (Log - Option B)** | **0.0442** | **Thỏa mãn ($\approx 0$)** | **0.9571 ($>0.05$)** | **$5.19 \times 10^{-13}$ ($<0.05$)** | **KHÔNG đạt** (Còn mùa vụ tại lag 12) |
 | $\text{ARIMA}(1, 1, 1)$ (Raw) | 0.0881 | Thỏa mãn ($\approx 0$) | 0.8842 ($>0.05$) | $2.45 \times 10^{-31}$ ($<0.05$) | **KHÔNG đạt** (Còn mùa vụ tại lag 12) |
-| $\text{ARIMA}(2, 1, 1)$ (Raw) | 0.0881 | Thỏa mãn ($\approx 0$) | 0.8995 ($>0.05$) | $1.78 \times 10^{-31}$ ($<0.05$) | **KHÔNG đạt** (Còn mùa vụ tại lag 12) |
 | **$\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$** | **0.0342** | **Thỏa mãn ($\approx 0$)** | **0.9412 ($>0.05$)** | **0.4285 ($>0.05$)** | **ĐẠT NHIỄU TRẮNG HOÀN TOÀN** |
 
 ---
@@ -65,9 +62,7 @@ $$e_t = Y_t - \hat{Y}_t$$
 | Mô hình | MAE (Triệu $) | RMSE (Triệu $) | MAPE (%) | Sai lệch lớn nhất (Max Error) | Đánh giá |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **$\text{ARIMA}(1, 1, 1)$ (Log - Option B)** | **3.8329** | **4.8714** | **18.49%** | **14.2882** (tháng `2008-01`) | **Trung bình (Bám tốt Trend, bỏ lỡ mùa vụ)** |
-| $\text{ARIMA}(2, 1, 1)$ (Log) | 3.8115 | 4.8321 | 18.36% | 14.1920 (tháng `2008-01`) | Tương đương (Thêm tham số không cải thiện) |
 | $\text{ARIMA}(1, 1, 1)$ (Raw) | 3.6667 | 4.6243 | 18.04% | 13.7975 (tháng `2008-01`) | Trung bình (Bỏ lỡ mùa vụ) |
-| $\text{ARIMA}(2, 1, 1)$ (Raw) | 3.6702 | 4.6285 | 18.06% | 13.8512 (tháng `2008-01`) | Trung bình (Bỏ lỡ mùa vụ) |
 | **$\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$** | **1.5608** | **2.0023** | **9.06%** | **6.8412** (tháng `2008-01`) | **Rất tốt (Kiểm soát cả trend lẫn mùa vụ)** |
 
 ---

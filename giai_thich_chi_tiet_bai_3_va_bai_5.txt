@@ -1,0 +1,548 @@
+====================================================================================================
+BÁO CÁO GIẢI THÍCH CHI TIẾT TỪNG PHẦN: BÀI 3 VÀ BÀI 5 TRONG NOTEBOOK MAIN.IPYNB
+Học phần: Phân tích Chuỗi Thời Gian (Time Series Analysis & Forecasting)
+Bộ dữ liệu thực nghiệm: Doanh số Thuốc Trị Tiểu Đường Hàng Tháng tại Úc (a10.csv)
+Thời gian quan sát: 204 tháng (Từ tháng 07/1991 đến tháng 06/2008)
+File thực hành: scripts/main.ipynb
+====================================================================================================
+
+MỤC LỤC TỔNG QUAN:
+  PHẦN I: GIẢI THÍCH CHI TIẾT BÀI 3 - SAI PHÂN & KIỂM ĐỊNH LẠI (FIRST-ORDER DIFFERENCING & ADF RE-TESTING)
+    1. Cơ sở lý thuyết và mục tiêu của Bài 3
+    2. Giải thích chi tiết từng dòng code trong Cell 16 (Tính toán sai phân)
+    3. Giải thích chi tiết từng dòng code và đồ thị trong Cell 17 (Trực quan hóa so sánh)
+    4. Giải thích chi tiết từng dòng code và kết quả trong Cell 18 (Hàm kiểm định ADF & Bảng đối sánh)
+    5. Giải thích cặn kẽ kết luận & Trả lời 2 câu hỏi trọng tâm Bài 3 (Cell 19)
+
+  PHẦN II: GIẢI THÍCH CHI TIẾT BÀI 5 - THIẾT LẬP MÔ HÌNH ARIMA / SARIMA – DỰ ĐOÁN – ĐÁNH GIÁ
+    1. Cơ sở lý thuyết và mục tiêu của Bài 5 trong quy trình Box-Jenkins
+    2. Giải thích chi tiết Cell 24: Phân chia tập dữ liệu Train (80%) và Test (20%)
+    3. Giải thích chi tiết Cell 25: Thiết lập và Huấn luyện các mô hình ARIMA trên tập Train
+    4. Giải thích chi tiết Cell 26: Chẩn đoán phần dư toàn diện (Residual Diagnostics)
+    5. Giải thích chi tiết Cell 27: Dự báo ngoài mẫu (Out-of-sample Forecast) trên tập Test
+    6. Giải thích chi tiết Cell 28: Đánh giá định lượng qua 3 chỉ số MAE, RMSE, MAPE
+    7. Giải thích chi tiết toàn bộ 9 câu hỏi trọng tâm Bài 5 (Cell 29)
+
+  PHẦN III: TỔNG KẾT MỐI QUAN HỆ KẾ THỪA LOGIC GIỮA BÀI 3 VÀ BÀI 5
+
+====================================================================================================
+PHẦN I: GIẢI THÍCH CHI TIẾT BÀI 3
+SAI PHÂN & KIỂM ĐỊNH LẠI (FIRST-ORDER DIFFERENCING & ADF RE-TESTING)
+====================================================================================================
+
+1. CƠ SỞ LÝ THUYẾT VÀ MỤC TIÊU CỦA BÀI 3 (Cell 15 Markdown)
+----------------------------------------------------------------------------------------------------
+Trong Bài 1 (EDA) và Bài 2 (Kiểm định ADF trên chuỗi gốc), ta đã chứng minh chuỗi dữ liệu gốc Y_t
+là chuỗi KHÔNG DỪNG (Non-stationary) vì:
+  - Có xu hướng tăng trưởng tuyến tính rõ rệt qua thời gian (Trend).
+  - Thống kê ADF chuỗi gốc: ADF Stat = +3.1452, p-value = 1.000000 > 0.05 (chuỗi có nghiệm đơn vị).
+
+Mục tiêu cốt lõi của Bài 3 là:
+  a. Áp dụng toán tử sai phân thường bậc 1:
+        ΔY_t = (1 - B)Y_t = Y_t - Y_{t-1}
+     nhằm triệt tiêu thành phần xu hướng tăng trưởng dài hạn (Detrending).
+  b. Nhận diện hiện tượng Phương sai thay đổi (Heteroscedasticity) & biên độ dao động phình to trên chuỗi
+     sai phân thường do dữ liệu gốc có đặc tính mùa vụ nhân tính (Multiplicative Seasonality).
+  c. Áp dụng phép biến đổi Logarit để ổn định hóa phương sai trước khi lấy sai phân:
+        Δln(Y_t) = ln(Y_t) - ln(Y_{t-1})
+  d. Trực quan hóa đối sánh chuỗi sai phân thường và sai phân logarit kết hợp đường Rolling Mean
+     và Rolling Std với cửa sổ trượt 12 tháng.
+  e. Tái thực hiện kiểm định nghiệm đơn vị Augmented Dickey-Fuller (ADF) trên cả 2 chuỗi sai phân
+     để khẳng định dứt khoát bậc tích hợp d = 1 cho mô hình ARIMA(p, d, q).
+
+----------------------------------------------------------------------------------------------------
+2. GIẢI THÍCH CHI TIẾT TỪNG DÒNG CODE TRONG CELL 16 (TÍNH TOÁN SAI PHÂN)
+----------------------------------------------------------------------------------------------------
+Đoạn code trong Cell 16 thực hiện các thao tác:
+
+- Dòng 1-3:
+    df['diff_1'] = df['value'].diff(1)
+    diff1_series = df['diff_1'].dropna()
+  * Ý nghĩa:
+    + Hàm `.diff(1)` tính toán chênh lệch giữa giá trị tại thời điểm t và thời điểm (t - 1):
+      ΔY_t = Y_t - Y_{t-1}.
+    + Do quan sát đầu tiên (tháng 07/1991) không có tháng trước đó (t - 1) để trừ, nên `df['diff_1']`
+      tại dòng đầu tiên mang giá trị NaN (Not a Number).
+    + `.dropna()` loại bỏ giá trị NaN này để thu được chuỗi sạch `diff1_series` có độ dài 203 tháng
+      (giảm đúng 1 quan sát so với chuỗi gốc 204 tháng).
+
+- Dòng 5-8:
+    df['log_value'] = np.log(df['value'])
+    df['log_diff_1'] = df['log_value'].diff(1)
+    log_diff1_series = df['log_diff_1'].dropna()
+  * Ý nghĩa:
+    + `np.log(df['value'])` thực hiện phép biến đổi Logarit tự nhiên trên toàn bộ chuỗi gốc.
+      Trong kinh tế lượng và chuỗi thời gian, hàm Logarit có tác dụng "nén" các giá trị lớn,
+      chuyển mối quan hệ mùa vụ dạng nhân (Multiplicative) về dạng cộng (Additive), từ đó
+      triệt tiêu hiện tượng phương sai phình to theo thời gian.
+    + `.diff(1)` trên chuỗi Logarit: Δln(Y_t) = ln(Y_t) - ln(Y_{t-1}).
+      Về mặt kinh tế, giá trị này đại diện xấp xỉ cho TỐC ĐỘ TĂNG TRƯỞNG TƯƠNG ĐỐI (Growth Rate)
+      của doanh số từ tháng này sang tháng trước: (Y_t - Y_{t-1}) / Y_{t-1}.
+    + Tương tự, `log_diff1_series` có 203 quan sát sau khi loại bỏ giá trị NaN đầu tiên.
+
+- Dòng 10-21:
+    In số lượng quan sát, hiển thị 6 dòng đầu tiên `head(6)` và lập bảng thống kê mô tả `describe()`.
+  * Ý nghĩa:
+    + Giúp người phân tích kiểm tra trực tiếp tính đúng đắn của dữ liệu: dòng đầu tiên có NaN,
+      từ dòng thứ 2 trở đi có giá trị sai phân.
+    + Bảng `desc_df` cho thấy:
+        . diff_1: Giá trị trung bình Mean = +0.103 triệu USD, Min = -5.44, Max = +5.83, Std = 1.94
+        . log_diff_1: Mean = +0.0097 (rất gần 0), Std = 0.176, Min = -0.51, Max = +0.40.
+        -> Biến đổi Log giúp thu hẹp độ lệch chuẩn từ 1.94 xuống chỉ còn 0.176, làm thang đo
+           trở nên cân bằng và ổn định hơn rất nhiều.
+
+----------------------------------------------------------------------------------------------------
+3. GIẢI THÍCH CHI TIẾT TỪNG DÒNG CODE VÀ ĐỒ THỊ TRONG CELL 17 (TRỰC QUAN HÓA SO SÁNH)
+----------------------------------------------------------------------------------------------------
+Đoạn code trong Cell 17 khởi tạo một đồ thị gồm 2 panel thẳng đứng (Subplots 2 hàng 1 cột):
+
+- Panel 1: Chuỗi sai phân bậc 1 thường (ΔY_t)
+    ax1.plot(diff1_series.index, diff1_series, color='#1f77b4', ...)
+    ax1.axhline(0.0, color='black', ...)
+    rolling_mean_diff1 = diff1_series.rolling(window=12).mean()
+    rolling_std_diff1 = diff1_series.rolling(window=12).std()
+    ax1.plot(rolling_mean_diff1, color='#d62728', linestyle='--', ...)
+    ax1.fill_between(..., rolling_mean - 2*rolling_std, rolling_mean + 2*rolling_std, color='#ff7f0e', alpha=0.18)
+  * Kỹ thuật xử lý:
+    + Dùng cửa sổ trượt 12 tháng (`rolling(window=12)`) vì chu kỳ tự nhiên của chuỗi a10 là 12 tháng/năm.
+    + Dải tô màu cam `fill_between` đại diện cho khoảng biến thiên [Mean - 2*Std, Mean + 2*Std]
+      (chứa xấp xỉ 95% quan sát nếu phân phối chuẩn).
+  * Cách đọc biểu đồ và nhận xét hiện tượng:
+    + Đường Rolling Mean màu đỏ nét đứt nằm ngang hoàn toàn bám sát đường 0 (Mean Stationary đạt chuẩn).
+    + Tuy nhiên, dải biên độ màu cam phình to dần theo dạng hình chiếc loa kèn: Năm 1992 biên độ chỉ
+      khoảng ±1 triệu USD, nhưng đến giai đoạn 2006-2008 biên độ phình to tới ±6 triệu USD.
+    + Đây là minh chứng trực quan rõ ràng nhất cho hiện tượng PHƯƠNG SAI THAY ĐỔI THEO THỜI GIAN
+      (Heteroscedasticity). Sai phân thường khử được xu hướng nhưng CHƯA khử được phương sai phình to.
+
+- Panel 2: Chuỗi sai phân bậc 1 Logarit (Δln(Y_t))
+    ax2.plot(log_diff1_series.index, log_diff1_series, color='#2ca02c', ...)
+    ax2.axhline(0.0, color='black', ...)
+    rolling_mean_log = log_diff1_series.rolling(window=12).mean()
+    rolling_std_log = log_diff1_series.rolling(window=12).std()
+    ax2.fill_between(..., rolling_mean_log - 2*rolling_std_log, rolling_mean_log + 2*rolling_std_log, color='#2ca02c', alpha=0.18)
+  * Cách đọc biểu đồ và nhận xét hiện tượng:
+    + Đường Rolling Mean màu đỏ tiếp tục nằm ngang phẳng tuyệt đối quanh 0.
+    + Dải biên độ ±2 Rolling Std màu xanh lá cây giữ nguyên một bề rộng song song đồng đều,
+      hoàn toàn không bị phình to ở cuối chuỗi.
+    + Kết luận: Phép biến đổi Logarit đã ổn định hóa thành công phương sai (Homoscedasticity).
+      Chuỗi này đạt tính dừng hoàn hảo cả về Kỳ vọng (Mean) lẫn Phương sai (Variance).
+
+- Dòng lưu ảnh:
+    plt.savefig('../docs/images/03_diff1_plot_a10.png', dpi=300)
+    Lưu đồ thị độ phân giải cao phục vụ báo cáo khoa học.
+
+----------------------------------------------------------------------------------------------------
+4. GIẢI THÍCH CHI TIẾT TỪNG DÒNG CODE VÀ KẾT QUẢ TRONG CELL 18 (HÀM ADF & BẢNG ĐỐI SÁNH)
+----------------------------------------------------------------------------------------------------
+- Định nghĩa hàm chuẩn hóa `run_adf_test(series, series_name, alpha=0.05)`:
+    result = adfuller(series.dropna(), autolag='AIC', result_object=False)
+  * Cấu trúc đầu ra của hàm `adfuller`:
+    + `result[0]`: Giá trị thống kê kiểm định ADF (Test Statistic).
+    + `result[1]`: p-value (Mức ý nghĩa xác suất theo MacKinnon).
+    + `result[2]`: Số độ trễ được thuật toán tự động lựa chọn (Lags used).
+    + `result[3]`: Số quan sát hiệu dụng dùng trong hồi quy (Number of observations).
+    + `result[4]`: Từ điển chứa các ngưỡng giá trị tới hạn (Critical Values) tại 1%, 5%, 10%.
+  * Thuật toán chọn lag tối ưu: `autolag='AIC'`
+    + Tự động thử nghiệm các bậc trễ p và chọn bậc có tiêu chuẩn thông tin Akaike (AIC) nhỏ nhất,
+      nhằm cân bằng giữa việc lọc sạch tự tương quan phần dư và việc tiết kiệm bậc tự do.
+  * Logic kết luận kiểm định thống kê:
+    + Giả thuyết không H0: Chuỗi có nghiệm đơn vị (Unit Root) -> Chuỗi KHÔNG DỪNG (Non-stationary).
+    + Giả thuyết đối H1: Chuỗi không có nghiệm đơn vị -> Chuỗi ĐÃ DỪNG (Stationary).
+    + Điều kiện bác bỏ H0 tại mức ý nghĩa α = 0.05:
+         p-value < 0.05 VÀ ADF Test Statistic < Critical Value 5% (do giá trị tới hạn là số âm).
+
+- Kết quả thực nghiệm đối sánh 3 chuỗi dữ liệu:
+  =============================================================================================
+  Chuỗi dữ liệu                       Bậc d   ADF Stat   p-value    Lags  Ngưỡng 5%  Kết luận
+  =============================================================================================
+  Chuỗi gốc Y_t (Bài 2)                 0     +3.1452    1.000000    15    -2.8770   Không dừng
+  Chuỗi sai phân thường ΔY_t (Bài 3)    1     -2.4952    0.116653    15    -2.8771   Không dừng
+  Chuỗi sai phân Log Δln(Y_t) (Bài 3)   1     -4.5194    0.000181    13    -2.8770   ĐÃ DỪNG
+  =============================================================================================
+
+- Phân tích bản chất sâu sắc của kết quả kiểm định:
+  * Tại sao chuỗi sai phân thường ΔY_t có p-value = 0.116653 > 0.05 (chưa dừng)?
+    Bởi vì thuật toán chọn tới 15 độ trễ (lags) để kiểm soát chu kỳ mùa vụ 12 tháng, kết hợp với
+    hiện tượng phương sai phình to ở cuối chuỗi. Phương sai mở rộng làm tăng sai số chuẩn của
+    hệ số hồi quy trong phương trình ADF, khiến tỷ số t-statistic (chính là ADF stat = -2.4952)
+    chưa đủ âm để vượt qua ngưỡng khắt khe -2.8771.
+  * Tại sao chuỗi sai phân Logarit Δln(Y_t) lại dừng dứt khoát?
+    Khi phương sai được bình ổn bằng hàm logarit, độ nhiễu và sự phình to bị triệt tiêu,
+    phép kiểm định ADF đạt giá trị thống kê cực kỳ mạnh mẽ: ADF Stat = -4.5194 (âm sâu hơn rất nhiều
+    so với ngưỡng 5% là -2.8770 và ngưỡng 1% là -3.465), p-value = 0.000181 << 0.05.
+    Điều này cho phép BÁC BỎ HOÀN TOÀN GIẢ THUYẾT H0 và kết luận chuỗi đã đạt tính dừng yếu toàn phần.
+
+----------------------------------------------------------------------------------------------------
+5. GIẢI THÍCH KẾT LUẬN & TRẢ LỜI 2 CÂU HỎI TRỌNG TÂM BÀI 3 (Cell 19 Markdown)
+----------------------------------------------------------------------------------------------------
+Câu hỏi 1: Sau sai phân, chuỗi đã dừng chưa?
+- Trả lời: Chuỗi ĐÃ ĐẠT TÍNH DỪNG HOÀN TOÀN sau khi lấy sai phân bậc 1 trên nền Logarit.
+- Phân tích chi tiết theo 3 khía cạnh khoa học:
+  1. Về mặt Kỳ vọng (Mean): Cả chuỗi sai phân thường lẫn sai phân log đều có đường trung bình trượt
+     Rolling Mean nằm ngang sát trục 0 -> Tính dừng về kỳ vọng đã thỏa mãn (E[ΔY_t] = const ≈ 0).
+  2. Về mặt Phương sai (Variance): Chuỗi sai phân thường chưa dừng về phương sai (bị phình to),
+     nhưng chuỗi sai phân logarit Δln(Y_t) đã ổn định hoàn toàn phương sai (Var[Δln(Y_t)] = const).
+  3. Về mặt Kiểm định nghiệm đơn vị (ADF Test): Chuỗi sai phân Logarit đạt ADF = -4.5194,
+     p-value = 0.000181 < 0.05, đủ bằng chứng thống kê vững chắc kết luận chuỗi dừng yếu (Weakly Stationary).
+
+Câu hỏi 2: Giá trị d trong ARIMA là bao nhiêu?
+- Trả lời: Giá trị tham số bậc tích hợp (Order of Integration) là d = 1.
+- Lý giải chuyên môn:
+  * Chuỗi gốc Y_t không dừng ở bậc d = 0, nhưng chỉ sau đúng 1 lần lấy sai phân bậc nhất
+    (ΔY_t = Y_t - Y_{t-1}) thì chuỗi đã triệt tiêu nghiệm đơn vị và đạt trạng thái dừng.
+    Do đó, theo định nghĩa, chuỗi gốc tích hợp bậc 1, ký hiệu: Y_t ~ I(1).
+  * Áp dụng Nguyên lý Tiết kiệm Tham số (Principle of Parsimony) trong phương pháp luận Box-Jenkins:
+    Ta dừng việc lấy sai phân thường ngay tại d = 1.
+  * Cảnh báo chuyên môn: Tuyệt đối KHÔNG lấy sai phân bậc 2 (d = 2) vì sẽ dẫn tới hiện tượng
+    SAI PHÂN QUÁ MỨC (Over-differencing). Sai phân quá mức sẽ bơm thêm nhiễu nhân tạo, làm tăng
+    phương sai của phần dư và sinh ra nghiệm đơn vị giả trong đa thức trung bình trượt MA (MA Unit Root),
+    khiến việc ước lượng mô hình ARIMA trở nên bất ổn định.
+
+
+====================================================================================================
+PHẦN II: GIẢI THÍCH CHI TIẾT BÀI 5
+THIẾT LẬP MÔ HÌNH ARIMA / SARIMA – DỰ ĐOÁN – ĐÁNH GIÁ
+====================================================================================================
+
+1. CƠ SỞ LÝ THUYẾT VÀ MỤC TIÊU CỦA BÀI 5 TRONG QUY TRÌNH BOX-JENKINS (Cell 23 Markdown)
+----------------------------------------------------------------------------------------------------
+Sau khi đã hoàn thành Định danh mô hình (Model Identification):
+  - Xác định d = 1 từ Bài 3.
+  - Phân tích lược đồ ACF/PACF từ Bài 4: ACF cắt cụt sau Lag 1, PACF tắt dần dạng sin/hàm mũ,
+    chỉ ra mô hình ứng viên bám sát lý thuyết trung bình trượt là ARIMA(0, 1, 1). Đồng thời đề xuất
+    3 mô hình ứng viên được đề xuất trong Bài 4: ARIMA(0, 1, 1), ARIMA(0, 1, 2) và ARIMA(1, 1, 1).
+
+Bài 5 bước vào 3 giai đoạn tiếp theo của quy trình Box-Jenkins:
+  - Phân chia dữ liệu tuần tự thành Train (80%) và Test (20%).
+  - Ước lượng tham số (Parameter Estimation) trên tập Train bằng phương pháp Khả năng tối đa (MLE).
+  - Chẩn đoán mô hình (Diagnostic Checking): Kiểm tra xem phần dư có thỏa mãn tính chất Nhiễu trắng không.
+  - Dự báo ngoài mẫu (Out-of-sample Forecasting) trên tập Test và đánh giá định lượng qua MAE, RMSE, MAPE.
+  - Giải đáp toàn diện 9 câu hỏi trọng tâm.
+
+----------------------------------------------------------------------------------------------------
+2. GIẢI THÍCH CHI TIẾT CELL 24: PHÂN CHIA TẬP TRAIN (80%) VÀ TEST (20%)
+----------------------------------------------------------------------------------------------------
+- Phân tích từng dòng code:
+    train_size = int(len(df) * 0.8)
+    train_df = df.iloc[:train_size].copy()
+    test_df = df.iloc[train_size:].copy()
+  * Tổng số quan sát toàn bộ chuỗi: 204 tháng (từ 1991-07 đến 2008-06).
+  * `train_size = int(204 * 0.8) = 163` tháng.
+  * `train_df`: 163 tháng đầu tiên (từ 1991-07 đến 2005-01).
+  * `test_df`: 41 tháng còn lại (từ 2005-02 đến 2008-06).
+
+- Lưu trữ chuẩn hóa dữ liệu:
+    train_df.to_csv('data/processed/train_set.csv')
+    test_df.to_csv('data/processed/test_set.csv')
+    Đảm bảo việc lưu vết dữ liệu (Data Versioning) để bất kỳ thành viên nào cũng có thể tái lập kết quả.
+
+- Trực quan hóa ranh giới phân chia:
+    Vẽ đường Train màu xanh dương, Test màu cam và vạch thẳng đứng màu đỏ nét đứt tại mốc 2005-02.
+    Lưu đồ thị tại: `docs/images/05_train_test_split_a10.png`.
+
+- Ý nghĩa học thuật cốt lõi:
+    Trong dữ liệu dạng chuỗi thời gian, TUYỆT ĐỐI KHÔNG ĐƯỢC XÁO TRỘN (No Shuffling).
+    Dữ liệu bắt buộc phải được cắt theo trục thời gian tuần tự (Temporal Split). Lý do chi tiết
+    sẽ được trình bày tại câu hỏi 1 của Bài 5.
+
+----------------------------------------------------------------------------------------------------
+3. GIẢI THÍCH CHI TIẾT CELL 25: THIẾT LẬP VÀ HUẤN LUYỆN MÔ HÌNH ARIMA TRÊN TẬP TRAIN
+----------------------------------------------------------------------------------------------------
+- Xử lý biến đổi Logarit trên tập Train:
+    train_log = np.log(train_df['value'])
+  * Lý do: Bài 3 đã chứng minh chuỗi gốc có phương sai phình to, chỉ có chuỗi Logarit mới dừng toàn phần.
+    Do đó, mô hình ARIMA sẽ được huấn luyện trực tiếp trên chuỗi logarit `train_log`.
+
+- Khởi tạo danh mục các mô hình ứng viên (Candidate Orders):
+    candidate_orders = {
+        'ARIMA(0, 1, 1)': (0, 1, 1),   # Ứng viên 1: Mô hình MA(1) thuần bám sát ACF/PACF
+        'ARIMA(0, 1, 2)': (0, 1, 2),   # Ứng viên 2: Mở rộng bậc trung bình trượt MA(2)
+        'ARIMA(1, 1, 1)': (1, 1, 1)    # Ứng viên 3: Mô hình hỗn hợp ARMA(1, 1)
+    }
+
+- Vòng lặp huấn luyện bằng statsmodels:
+    model = ARIMA(train_log, order=order)
+    res = model.fit()
+  * Hàm `model.fit()` sử dụng thuật toán tối ưu hóa Khả năng tối đa (Maximum Likelihood Estimation - MLE)
+    để tìm ra tập tham số (phi, theta, sigma^2) làm cực đại hóa hàm Log-Likelihood (ln L).
+
+- Đánh giá mô hình qua Tiêu chuẩn thông tin:
+  * Tiêu chuẩn AIC (Akaike Information Criterion):
+        AIC = 2k - 2*ln(L)
+    Trong đó: k là số lượng tham số ước lượng trong mô hình, ln(L) là Log-Likelihood cực đại.
+    Mục đích: Ưu tiên mô hình có độ khớp cao (ln L lớn) nhưng phạt mô hình có quá nhiều tham số (2k).
+  * Tiêu chuẩn BIC (Bayesian Information Criterion / Schwarz Criterion):
+        BIC = k*ln(n) - 2*ln(L)
+    Trong đó: n là kích thước mẫu (n = 163).
+    Mục đích: BIC phạt tham số nặng hơn AIC vì ln(163) ≈ 5.09 > 2. BIC rất có lợi trong việc
+    chống lại hiện tượng quá khớp (Overfitting).
+
+- Bảng kết quả thực nghiệm trên tập Train (163 tháng):
+  =============================================================================================
+  Mô hình           Cấu hình    Số tham số     AIC       BIC     Log-Likelihood   Hội tụ (Convergence)
+  =============================================================================================
+  ARIMA(1, 1, 1)    (1, 1, 1)       2        -131.05   -121.79       68.52              True
+  ARIMA(0, 1, 2)    (0, 1, 2)       2        -130.80   -121.53       68.40              True
+  ARIMA(0, 1, 1)    (0, 1, 1)       1        -120.45   -114.27       62.22              True
+  =============================================================================================
+
+- Nhận xét kết quả:
+  * Trên tập Train, mô hình hỗn hợp ARIMA(1, 1, 1) đạt cả AIC (-131.05) và BIC (-121.79) thấp nhất.
+  * Do đó, code tự động chọn `best_model_name = 'ARIMA(1, 1, 1)'` làm đại diện chính để thực hiện
+    chẩn đoán phần dư và dự báo.
+
+----------------------------------------------------------------------------------------------------
+4. GIẢI THÍCH CHI TIẾT CELL 26: CHẨN ĐOÁN PHẦN DƯ (RESIDUAL DIAGNOSTICS)
+----------------------------------------------------------------------------------------------------
+Phần dư được định nghĩa là chênh lệch giữa giá trị thực tế và giá trị được mô hình khớp trên tập Train:
+    e_t = Y_t - \hat{Y}_t
+Trong code: `residuals = best_model.resid`.
+
+Mục tiêu chẩn đoán: Kiểm tra xem e_t có phải là NHIỄU TRẮNG (White Noise) hay không.
+Một quá trình là Nhiễu trắng chuẩn tắc nếu thỏa mãn 3 điều kiện:
+  1. Kỳ vọng toán học bằng 0: E[e_t] = 0 (Dự báo không bị chệch hệ thống).
+  2. Phương sai không đổi: Var[e_t] = σ^2 < ∞ (Homoscedasticity).
+  3. Không có tự tương quan: Cov(e_t, e_{t-k}) = 0 với mọi độ trễ k ≠ 0.
+
+- Định lượng các chỉ số phần dư:
+  * `resid_mean = residuals.mean() = 0.044193` (rất gần 0 -> Thỏa mãn điều kiện 1).
+  * `resid_std = residuals.std() = 0.1585`.
+
+- Kiểm định Ljung-Box (Kiểm tra tự tương quan phần dư):
+    lb_test = acorr_ljungbox(residuals, lags=[12, 24], return_df=True)
+  * Giả thuyết H0: Phần dư độc lập, không có tự tương quan đến độ trễ m (Nhiễu trắng).
+  * Giả thuyết H1: Phần dư còn tự tương quan tại ít nhất một độ trễ.
+  * Kết quả kiểm định tại độ trễ mùa vụ Lag 12:
+      Thống kê Ljung-Box Q = 84.70, p-value = 5.19 x 10^(-13) << 0.05.
+  * Kết luận: Bác bỏ H0. Phần dư CHƯA PHẢI là Nhiễu trắng hoàn toàn vì vẫn còn sót lại
+    cấu trúc tương quan mùa vụ chu kỳ 12 tháng chưa được mô hình hóa.
+
+- Giải thích chi tiết 4 Panel trong biểu đồ chẩn đoán (`05_residual_diagnostics_a10.png`):
+  1. Panel trên-trái (Residuals over Time):
+     * Các chấm phần dư dao động bám sát đường 0, phần lớn nằm gọn bên trong dải ±2 Std (đường đỏ nét đứt).
+     * Tuy nhiên, cứ định kỳ khoảng 12 tháng lại xuất hiện một gai nhọn đột biến hướng lên,
+       phản ánh việc mô hình ARIMA phi mùa vụ không bắt kịp các tháng doanh số vọt đỉnh.
+  2. Panel trên-phải (Density vs Normal):
+     * Đường cong mật độ thực tế KDE (màu xanh lá) có đỉnh nhọn cao hơn và tập trung quanh 0
+       so với phân phối chuẩn lý thuyết N(0, σ^2) (đường đỏ nét đứt).
+     * Phân phối có dạng đuôi tương đối dài (leptokurtic), nhưng về tổng thể vẫn mang tính đối xứng.
+  3. Panel dưới-trái (Biểu đồ Q-Q Plot):
+     * Trục hoành là phân vị lý thuyết chuẩn, trục tung là phân vị thực tế của phần dư.
+     * Ở vùng trung tâm (từ -1.5 đến +1.5), các điểm dữ liệu nằm khít trên đường thẳng chuẩn 45 độ.
+     * Ở hai đầu mút (đặc biệt là phía phân vị dương lớn), các điểm bị uốn cong lệch khỏi đường thẳng,
+       cho thấy sự tồn tại của một số giá trị ngoại lai (outliers) do mùa vụ gây ra.
+  4. Panel dưới-phải (ACF of Residuals):
+     * Tại các độ trễ phi mùa vụ (Lag 1 đến Lag 11), hệ số tự tương quan nằm hoàn toàn bên trong
+       vùng tin cậy màu xanh (không có ý nghĩa thống kê, chứng minh thành phần phi mùa vụ đã được lọc sạch).
+     * Tuy nhiên, tại chính xác Lag 12 và Lag 24 (vạch nét đứt màu xanh lá), cột ACF vọt lên cao vượt
+       khỏi dải tin cậy. Đây là bằng chứng không thể chối cãi cho thấy mô hình ARIMA phi mùa vụ
+       đã "bỏ quên" chu kỳ mùa vụ hàng năm.
+
+----------------------------------------------------------------------------------------------------
+5. GIẢI THÍCH CHI TIẾT CELL 27: DỰ BÁO NGOÀI MẪU (OUT-OF-SAMPLE FORECAST) TRÊN TẬP TEST
+----------------------------------------------------------------------------------------------------
+- Phân tích từng dòng code:
+    forecast_res = best_model.get_forecast(steps=len(test_df))
+    pred_log = forecast_res.predicted_mean
+    conf_int_log = forecast_res.conf_int(alpha=0.05)
+  * `steps=len(test_df)`: Thiết lập dự báo ngoài mẫu đúng 41 bước thời gian (tương ứng 41 tháng tập Test).
+  * `conf_int(alpha=0.05)`: Tính toán khoảng tin cậy 95% (Lower Bound và Upper Bound) trên thang đo Logarit.
+
+- Bước biến đổi ngược cực kỳ quan trọng:
+    pred_orig = np.exp(pred_log)
+    conf_int_orig = np.exp(conf_int_log)
+  * Lý do: Do mô hình được fit trên chuỗi logarit `ln(Y_t)`, các giá trị dự báo sinh ra đang ở đơn vị log.
+    Để so sánh trực tiếp với doanh số thực tế (đơn vị: triệu USD), ta bắt buộc phải áp dụng hàm mũ
+    ngược `np.exp()` cho cả đường dự báo trung bình lẫn khoảng tin cậy.
+
+- Giải thích đồ thị kết quả dự báo (`05_forecast_evaluation_a10.png`):
+  * Đường màu xanh dương: Chuỗi Train thực tế trong quá khứ (163 tháng).
+  * Đường màu đen có chấm tròn: Chuỗi Test thực tế (41 tháng).
+  * Đường màu đỏ nét đứt: Đường dự báo điểm (Forecast) của mô hình ARIMA(1, 1, 1).
+  * Dải tô màu đỏ nhạt: Khoảng tin cậy 95% của dự báo.
+  * Đường màu tím nét chấm: Vạch phân định mốc thời gian bắt đầu tập Test (tháng 02/2005).
+  * Nhận xét trực quan:
+    + Đường dự báo đỏ nét đứt bám rất sát XU HƯỚNG TĂNG TRƯỞNG TRUNG BÌNH của tập Test
+      (nâng từ 15 triệu USD năm 2005 lên hơn 21 triệu USD năm 2008).
+    + Dải tin cậy 95% bao bọc trọn vẹn toàn bộ các điểm thực tế của tập Test.
+    + Tuy nhiên, đường dự báo là một đường cong trơn nhẵn, hoàn toàn nằm phẳng ở giữa
+      và KHÔNG THỂ TÁI TẠO ĐƯỢC các đỉnh nhọn vọt lên vào tháng 1 và các đáy thụt xuống vào tháng 2 hàng năm.
+
+----------------------------------------------------------------------------------------------------
+6. GIẢI THÍCH CHI TIẾT CELL 28: ĐÁNH GIÁ ĐỊNH LƯỢNG SAI SỐ (MAE, RMSE, MAPE)
+----------------------------------------------------------------------------------------------------
+- Cơ sở toán học của 3 chỉ số đánh giá bắt buộc:
+  1. MAE (Mean Absolute Error - Sai số tuyệt đối trung bình):
+        MAE = (1/n) * \sum_{t=1}^{n} |y_t - \hat{y}_t|
+     * Đo lường độ lệch trung bình giữa thực tế và dự báo theo cùng đơn vị đo (triệu USD).
+     * Trọng số lỗi tuyến tính, dễ giải thích trực giác cho doanh nghiệp.
+  2. RMSE (Root Mean Squared Error - Căn bậc hai trung bình bình phương sai số):
+        RMSE = \sqrt{ (1/n) * \sum_{t=1}^{n} (y_t - \hat{y}_t)^2 }
+     * Do có bước bình phương sai số trước khi lấy căn, RMSE phạt RẤT NẶNG các sai số lớn.
+     * Đại diện cho độ lệch chuẩn của sai số dự báo.
+  3. MAPE (Mean Absolute Percentage Error - Sai số phần trăm tuyệt đối trung bình):
+        MAPE = (100% / n) * \sum_{t=1}^{n} |(y_t - \hat{y}_t) / y_t|
+     * Đo lường mức độ sai lệch theo tỷ lệ phần trăm so với quy mô thực tế.
+     * Không phụ thuộc vào đơn vị đo, rất thuận tiện để so sánh giữa các bộ dữ liệu khác nhau.
+
+- Bảng tổng hợp đối sánh hiệu năng dự báo trên tập Test (41 tháng):
+  ========================================================================================================
+  Mô hình           MAE (Triệu $)   RMSE (Triệu $)   MAPE (%)   Độ chính xác   Nhận xét hiệu năng
+  ========================================================================================================
+  ARIMA(0, 1, 1)        3.47            4.54          16.79%       83.21%      MA thuần: Tiết kiệm tham số nhất, sai số Test thấp nhất
+  ARIMA(0, 1, 2)        3.52            4.59          17.02%       82.98%      Mở rộng MA(2): Hiệu năng cao
+  ARIMA(1, 1, 1)        3.83            4.87          18.49%       81.51%      Tối ưu AIC trên Train: Bám tốt Trend, bỏ lỡ mùa vụ
+  ========================================================================================================
+
+- BÀI HỌC KINH ĐIỂN VỀ HIỆU NĂNG MÔ HÌNH:
+  * Vì sao ARIMA(1, 1, 1) tối ưu nhất trên tập Train (AIC = -131.05) nhưng khi sang tập Test lại có
+    MAE (3.83) và RMSE (4.87) CAO HƠN so với ARIMA(0, 1, 1) (MAE = 3.47, RMSE = 4.54)?
+  * Giải thích bản chất:
+    + Mô hình ARIMA(1, 1, 1) có thêm tham số phi_1 (AR(1)). Trên tập Train, tham số này cố gắng học
+      cả những tương quan ngắn hạn kết hợp với nhiễu, dẫn đến hiện tượng chớm Quá khớp (Overfitting).
+    + Mô hình ARIMA(0, 1, 1) chỉ có duy nhất 1 tham số theta_1 (MA(1)), hoàn toàn bám sát nhận diện lý thuyết
+      từ lược đồ ACF/PACF (ACF cắt cụt tại lag 1). Mô hình này tuân thủ tuyệt đối NGUYÊN LÝ TIẾT KIỆM THAM SỐ
+      (Principle of Parsimony), nhờ đó có năng lực tổng quát hóa (Generalization) vượt trội khi dự báo
+      trên tập Test ngoài mẫu.
+
+----------------------------------------------------------------------------------------------------
+7. GIẢI THÍCH CHI TIẾT TOÀN BỘ 9 CÂU HỎI TRỌNG TÂM BÀI 5 (Cell 29 Markdown)
+----------------------------------------------------------------------------------------------------
+
+CÂU HỎI 1: Vì sao không được shuffle dữ liệu chuỗi thời gian? Test set dùng để làm gì?
+- Vì sao không được shuffle:
+  * Dữ liệu chuỗi thời gian có đặc tính cốt lõi là SỰ PHỤ THUỘC THEO THỨ TỰ THỜI GIAN TUẦN TỰ
+    (Temporal / Sequential Dependence). Giá trị quan sát ở thời điểm hiện tại Y_t được sinh ra dựa trên
+    các giá trị quá khứ liền kề (Y_{t-1}, Y_{t-2}, ...) kèm theo cấu trúc xu hướng và tính mùa vụ.
+  * Nếu thực hiện xáo trộn ngẫu nhiên (Random Shuffling) như học máy thông thường, ta sẽ phá vỡ hoàn toàn
+    cấu trúc tự tương quan này.
+  * Nghiêm trọng hơn, shuffle sẽ gây ra lỗi RÒ RỈ DỮ LIỆU (Data Leakage / Look-ahead Bias): Mô hình khi
+    học ở thời điểm quá khứ lại vô tình được "nhìn trước" các điểm dữ liệu trong tương lai. Điều này tạo ra
+    kết quả ảo tưởng rất cao trên tập huấn luyện nhưng mô hình sẽ thất bại hoàn toàn khi dự báo thực tế.
+- Test set dùng để làm gì:
+  * Tập Test đóng vai trò là "tương lai chưa biết" (Out-of-sample).
+  * Test set được dùng để ĐÁNH GIÁ KHÁCH QUAN NĂNG LỰC TỔNG QUÁT HÓA (Generalization Capability) và đo lường
+    độ chính xác thực tế của mô hình khi đối mặt với dữ liệu hoàn toàn mới mà nó chưa từng tiếp xúc.
+
+CÂU HỎI 2: Ý nghĩa của các tham số p, d, q đã chọn trong các mô hình?
+- Trong mô hình ARIMA(0, 1, 1) (Mô hình MA thuần túy nhận diện từ ACF/PACF):
+  * d = 1 (Bậc sai phân tích hợp): Thể hiện chuỗi gốc Y_t là chuỗi không dừng có xu hướng tăng ngẫu nhiên
+    (Stochastic Trend, I(1)). Phép sai phân bậc 1 trên nền logarit Δln(Y_t) giúp triệt tiêu xu hướng,
+    đưa chuỗi về trạng thái dừng có kỳ vọng ổn định quanh 0.
+  * p = 0 (Bậc tự hồi quy AR): Nhất quán với việc đồ thị PACF tắt dần hình sin/hàm mũ. Chuỗi không chịu
+    sự chi phối của quán tính tự hồi quy thuần túy.
+  * q = 1 (Bậc trung bình trượt MA): Tương ứng với việc đồ thị ACF cắt cụt dứt khoát sau Lag 1.
+    Đại diện cho CƠ CHẾ ĐIỀU CHỈNH SAI SỐ / HẤP THỤ CÚ SỐC: Doanh số tháng này được bù trừ bởi sai lệch
+    dự báo hoặc cú sốc ngẫu nhiên phát sinh từ tháng liền trước (epsilon_{t-1}) theo trọng số theta_1.
+- Trong mô hình ARIMA(1, 1, 1) (Mô hình hỗn hợp tối ưu AIC trên Train):
+  * Có thêm tham số p = 1: Thể hiện tốc độ tăng trưởng doanh số tháng này phụ thuộc trực tiếp vào
+    tốc độ tăng trưởng doanh số tháng liền trước theo tỷ lệ phi_1.
+
+CÂU HỎI 3: Mô hình có hội tụ không?
+- Trả lời: CÓ, cả mô hình ARIMA(0, 1, 1) và ARIMA(1, 1, 1) đều hội tụ thành công, ổn định và nhanh chóng.
+- Minh chứng kỹ thuật:
+  * Thuật toán ước lượng Khả năng tối đa (MLE) sử dụng bộ tối ưu hóa L-BFGS hoàn thành hội tụ
+    với trạng thái `converged = True` và không phát sinh bất kỳ cảnh báo `ConvergenceWarning` nào.
+  * Các tham số ước lượng thỏa mãn điều kiện khả nghịch (Invertibility condition: |theta_1| < 1)
+    và điều kiện dừng (|phi_1| < 1).
+  * Ma trận hiệp phương sai của các tham số xác định dương (Positive definite), đảm bảo mô hình
+    đạt nghiệm tối ưu toàn cục vững chắc.
+
+CÂU HỎI 4: Residuals có phải white noise không?
+- Trả lời: Phần dư CHƯA PHẢI là Nhiễu trắng (White Noise) hoàn toàn.
+- Minh chứng thống kê:
+  1. Về mặt kỳ vọng (Mean): Đạt yêu cầu lý tưởng với giá trị trung bình resid_mean = 0.044193 ≈ 0.
+  2. Về tính phân phối: Biểu đồ Density và Q-Q plot cho thấy phần dư bám tương đối sát phân phối chuẩn
+     ở vùng trung tâm, nhưng có đuôi dài do các tháng biến động đột biến.
+  3. Về tính độc lập (Không tự tương quan): Lược đồ ACF phần dư xuất hiện gai nhọn vượt dải tin cậy
+     tại chính xác Lag 12 và Lag 24. Kiểm định Ljung-Box tại Lag 12 cho p-value = 5.19 x 10^(-13) << 0.05,
+     bác bỏ giả thuyết H0 về tính độc lập. Điều này khẳng định phần dư vẫn còn sót lại cấu trúc tự tương quan
+     chu kỳ mùa vụ 12 tháng.
+
+CÂU HỎI 5: Nếu residuals còn tự tương quan -> Điều chỉnh gì?
+- Giải pháp điều chỉnh chuẩn tắc:
+  * Do phần dư còn tự tương quan mạnh tại các bội số của chu kỳ 12 tháng, mô hình ARIMA phi mùa vụ thuần túy
+    không đủ năng lực để mô hình hóa toàn diện.
+  * Ta bắt buộc phải nâng cấp sang mô hình SARIMA(p, d, q) x (P, D, Q)_s với chu kỳ mùa vụ s = 12:
+    + Bổ sung phép sai phân mùa vụ bậc 1: D = 1 nhằm triệt tiêu tương quan chu kỳ 12 tháng:
+         Δ_{12} Y_t = Y_t - Y_{t-12}
+    + Bổ sung tham số trung bình trượt mùa vụ Q = 1 (tạo thành mô hình SARIMA(0, 1, 1)(0, 1, 1)_{12}
+      - mô hình Airline kinh điển của Box-Jenkins) và/hoặc tham số tự hồi quy mùa vụ P = 1
+      (ví dụ: SARIMA(1, 1, 1)(1, 1, 1)_{12}).
+  * Khi có thành phần mùa vụ (P, D, Q)_12, mô hình sẽ lọc sạch toàn bộ dao động lặp lại theo năm,
+    đưa phần dư về trạng thái White Noise chuẩn tắc.
+
+CÂU HỎI 6: Dự đoán có bám sát xu hướng không?
+- Trả lời: CÓ, đường dự báo bám sát rất tốt XU HƯỚNG TĂNG TRƯỞNG DÀI HẠN (Trend) của tập Test.
+- Phân tích:
+  * Đường dự báo đi lên đều đặn và nằm ngay tại trục trung tâm của dải dữ liệu tập Test
+    (từ mức ~15 triệu USD năm 2005 lên ~21 triệu USD năm 2008).
+  * Toàn bộ các giá trị thực tế của tập Test nằm trọn vẹn bên trong dải tin cậy 95% (Confidence Interval).
+  * Tuy nhiên, đường dự báo có dạng một đường cong trơn đều, KHÔNG THỂ HIỆN ĐƯỢC CÁC ĐỈNH VÀ ĐÁY MÙA VỤ.
+
+CÂU HỎI 7: Sai lệch lớn nhất xảy ra ở đâu?
+- Vị trí sai lệch cực đại: Tập trung tại CÁC THÁNG 1 HÀNG NĂM (01/2006, 01/2007, 01/2008)
+  và kế tiếp là CÁC THÁNG 2 ngay sau đó.
+- Giải thích nguyên nhân thực tế:
+  * Tại Úc, chính sách trợ cấp dược phẩm chính phủ PBS (Pharmaceutical Benefits Scheme) reset ngưỡng
+    an toàn an sinh vào đầu mỗi năm dương lịch. Bệnh nhân có xu hướng tích trữ thuốc vào tháng 1 khiến
+    doanh số thuốc trị tiểu đường thực tế vọt đỉnh lên tới 25 - 29 triệu USD.
+  * Ngay sau đó, vào tháng 2, lượng tiêu thụ giảm đột ngột tạo thành đáy sâu.
+  * Mô hình ARIMA phi mùa vụ chỉ dự báo mức xu hướng trung bình (~17 - 20 triệu USD), do đó tại các tháng 1,
+    sai số tuyệt đối tức thời bị kéo giãn cực đại lên tới 8 - 10 triệu USD (đỉnh điểm tháng 01/2008
+    sai lệch lên tới 14.28 triệu USD).
+
+CÂU HỎI 8: Chỉ số nào nhạy với outlier nhất?
+- Trả lời: RMSE (Root Mean Squared Error) là chỉ số nhạy cảm nhất với outlier.
+- Bản chất toán học:
+  * Trong công thức: RMSE = \sqrt{ (1/n) * \sum (y_t - \hat{y}_t)^2 }
+    Khoảng sai lệch e_t bị BÌNH PHƯƠNG trước khi tính trung bình.
+  * Do đó, một sai lệch lớn (ví dụ lệch 10 triệu USD tại tháng 1) khi bình phương lên sẽ thành 100,
+    chiếm tỷ trọng chi phối áp đảo trong tổng sai số.
+  * Ngược lại, MAE = (1/n) * \sum |e_t| chỉ đo độ lệch tuyến tính bậc 1, nên ít bị chi phối bởi các điểm đột biến.
+  * Minh chứng thực nghiệm trong bài: RMSE = 4.87 triệu USD cao hơn đáng kể so với MAE = 3.83 triệu USD.
+
+CÂU HỎI 9: RMSE lớn hay nhỏ nói lên điều gì?
+- Ý nghĩa thống kê: RMSE đại diện cho ĐỘ LỆCH CHUẨN CỦA SAI SỐ DỰ BÁO (Standard Deviation of Forecast Errors)
+  tính theo cùng đơn vị đo lường thực tế (triệu USD).
+- Khi RMSE nhỏ:
+  * Các sai số dự báo phân tán chặt chẽ quanh giá trị thực tế; mô hình có tính ổn định cao và không có
+    các điểm dự báo trật quá xa thực tế.
+- Khi RMSE lớn:
+  * Cảnh báo mô hình tồn tại các sai số dự báo cực đoan (Large Errors).
+  * Trong bài toán này, giá trị RMSE = 4.87 triệu USD phản ánh trực tiếp việc mô hình bỏ lỡ hoàn toàn
+    các đỉnh nhọn mùa vụ của tháng 1. Đây là bằng chứng định lượng thúc đẩy yêu cầu cấp thiết phải
+    nâng cấp mô hình từ ARIMA lên SARIMA.
+
+
+====================================================================================================
+PHẦN III: TỔNG KẾT MỐI QUAN HỆ KẾ THỪA LOGIC GIỮA BÀI 3 VÀ BÀI 5
+====================================================================================================
+
+Quy trình phân tích chuỗi thời gian trong notebook `main.ipynb` được thiết kế theo một chuỗi logic chặt chẽ:
+
+1. BÀI 1 (EDA) & BÀI 2 (ADF Chuỗi gốc):
+   Phát hiện chuỗi a10 không dừng, có xu hướng tăng mạnh và mùa vụ chu kỳ 12 tháng.
+   ADF chuỗi gốc = +3.1452, p-value = 1.0 -> Cần phải xử lý tính dừng.
+
+2. BÀI 3 (Sai phân & Kiểm định lại):
+   - Nhận diện phương sai thay đổi (Heteroscedasticity) -> Áp dụng Logarit để ổn định phương sai.
+   - Sai phân bậc 1: Δln(Y_t) đưa chuỗi về trạng thái dừng hoàn toàn (ADF = -4.5194, p-value = 0.000181).
+   - KHÓNG CHẾ BẬC TÍCH HỢP: Chốt giá trị d = 1 cho mô hình ARIMA.
+
+3. BÀI 4 (Khảo sát ACF & PACF trên chuỗi đã sai phân):
+   - Đồ thị ACF cắt cụt sau Lag 1, PACF tắt dần -> Gợi ý cấu trúc mô hình MA(1): ARIMA(0, 1, 1).
+   - Đề xuất đúng 3 mô hình ứng viên bám sát lý thuyết: ARIMA(0, 1, 1), ARIMA(0, 1, 2), ARIMA(1, 1, 1).
+
+4. BÀI 5 (Huấn luyện, Chẩn đoán & Dự báo):
+   - Lấy tham số d = 1 từ Bài 3 và danh sách mô hình từ Bài 4.
+   - Huấn luyện trên tập Train (80%), so sánh qua AIC/BIC.
+   - Chẩn đoán phần dư: Phát hiện phần dư vẫn còn tương quan tại Lag 12 (chưa là White Noise).
+   - Dự báo ngoài mẫu trên tập Test (20%): Đo lường bằng MAE, RMSE, MAPE.
+   - Khẳng định giá trị thực tiễn: ARIMA(0, 1, 1) đạt sai số thực tế ngoài mẫu tốt nhất nhờ tiết kiệm
+     tham số; đồng thời chứng minh sự cần thiết phải mở rộng sang SARIMA để kiểm soát trọn vẹn cả mùa vụ.
+
+====================================================================================================
+HẾT BÁO CÁO GIẢI THÍCH CHI TIẾT
+====================================================================================================
+
