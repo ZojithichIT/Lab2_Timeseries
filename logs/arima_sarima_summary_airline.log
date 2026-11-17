@@ -1,0 +1,118 @@
+ARIMA Model Summary - Airline Passengers Forecasting
+============================================================
+Data: Monthly International Airline Passengers (1949-1960)
+Date range: 1949-01-01 00:00:00 to 1958-07-01 00:00:00
+Number of observations: 115
+AR order (p): 2
+Differencing order (d): 1
+MA order (q): 1
+Model: ARIMA(2, 1, 1)
+============================================================
+                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:             Passengers   No. Observations:                  115
+Model:                 ARIMA(2, 1, 1)   Log Likelihood                -525.324
+Date:                Tue, 17 Nov 2026   AIC                           1058.648
+Time:                        09:25:13   BIC                           1069.592
+Sample:                    01-01-1949   HQIC                          1063.089
+                         - 07-01-1958                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1          1.0717      0.111      9.615      0.000       0.853       1.290
+ar.L2         -0.4397      0.105     -4.177      0.000      -0.646      -0.233
+ma.L1         -0.8309      0.110     -7.556      0.000      -1.046      -0.615
+sigma2       585.6414     79.145      7.400      0.000     430.519     740.764
+===================================================================================
+Ljung-Box (L1) (Q):                   0.35   Jarque-Bera (JB):                 7.55
+Prob(Q):                              0.56   Prob(JB):                         0.02
+Heteroskedasticity (H):               6.24   Skew:                             0.61
+Prob(H) (two-sided):                  0.00   Kurtosis:                         2.69
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+============================================================
+
+SARIMA Model Summary - Airline Passengers Forecasting
+============================================================
+Data: Monthly International Airline Passengers (1949-1960)
+Date range: 1949-01-01 00:00:00 to 1958-07-01 00:00:00
+Number of observations: 115
+AR order (p): 0
+Differencing order (d): 1
+MA order (q): 1
+Seasonal AR order (P): 0
+Seasonal Differencing order (D): 1
+Seasonal MA order (Q): 1
+Seasonal Period (s): 12
+Model: SARIMA(0, 1, 1)x(0, 1, 1, 12)
+============================================================
+                                     SARIMAX Results                                      
+==========================================================================================
+Dep. Variable:                         Passengers   No. Observations:                  115
+Model:             SARIMAX(0, 1, 1)x(0, 1, 1, 12)   Log Likelihood                -375.190
+Date:                            Tue, 17 Nov 2026   AIC                            756.380
+Time:                                    09:25:13   BIC                            764.255
+Sample:                                01-01-1949   HQIC                           759.569
+                                     - 07-01-1958                                         
+Covariance Type:                              opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ma.L1         -0.1600      0.093     -1.723      0.085      -0.342       0.022
+ma.S.L12      -0.1238      0.092     -1.353      0.176      -0.303       0.056
+sigma2        91.5346     14.219      6.437      0.000      63.666     119.403
+===================================================================================
+Ljung-Box (L1) (Q):                   0.01   Jarque-Bera (JB):                 2.84
+Prob(Q):                              0.93   Prob(JB):                         0.24
+Heteroskedasticity (H):               1.07   Skew:                             0.37
+Prob(H) (two-sided):                  0.83   Kurtosis:                         2.64
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+============================================================
+
+SARIMA Model Summary - Airline Passengers Forecasting
+============================================================
+Data: Monthly International Airline Passengers (1949-1960)
+Date range: 1949-01-01 00:00:00 to 1958-07-01 00:00:00
+Number of observations: 115
+AR order (p): 1
+Differencing order (d): 1
+MA order (q): 1
+Seasonal AR order (P): 1
+Seasonal Differencing order (D): 1
+Seasonal MA order (Q): 1
+Seasonal Period (s): 12
+Model: SARIMA(1, 1, 1)x(1, 1, 1, 12)
+============================================================
+                                     SARIMAX Results                                      
+==========================================================================================
+Dep. Variable:                         Passengers   No. Observations:                  115
+Model:             SARIMAX(1, 1, 1)x(1, 1, 1, 12)   Log Likelihood                -374.130
+Date:                            Tue, 17 Nov 2026   AIC                            758.260
+Time:                                    09:25:13   BIC                            771.385
+Sample:                                01-01-1949   HQIC                           763.575
+                                     - 07-01-1958                                         
+Covariance Type:                              opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1         -0.6366      0.334     -1.908      0.056      -1.290       0.017
+ma.L1          0.4605      0.372      1.237      0.216      -0.269       1.190
+ar.S.L12      -0.3550      0.670     -0.530      0.596      -1.669       0.959
+ma.S.L12       0.2286      0.721      0.317      0.751      -1.184       1.641
+sigma2        89.5752     14.373      6.232      0.000      61.405     117.745
+===================================================================================
+Ljung-Box (L1) (Q):                   0.01   Jarque-Bera (JB):                 2.63
+Prob(Q):                              0.92   Prob(JB):                         0.27
+Heteroskedasticity (H):               1.18   Skew:                             0.33
+Prob(H) (two-sided):                  0.64   Kurtosis:                         2.59
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+============================================================

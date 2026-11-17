@@ -1,0 +1,106 @@
+ARIMA Model Summary - Monthly Anti-Diabetic Drug Sales in Australia (a10 - Log Scale)
+============================================================
+Data: Monthly Anti-Diabetic Drug Sales in Australia (a10 - Log Scale)
+Date range: 1991-07-01 00:00:00 to 2005-01-01 00:00:00
+Number of observations: 163
+AR order (p): 0
+Differencing order (d): 1
+MA order (q): 1
+Model: ARIMA(0, 1, 1)
+============================================================
+                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:              log_value   No. Observations:                  163
+Model:                 ARIMA(0, 1, 1)   Log Likelihood                  62.224
+Date:                Tue, 17 Nov 2026   AIC                           -120.448
+Time:                        09:35:12   BIC                           -114.273
+Sample:                    07-01-1991   HQIC                          -117.941
+                         - 01-01-2005                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ma.L1         -0.5651      0.055    -10.308      0.000      -0.673      -0.458
+sigma2         0.0271      0.003      8.758      0.000       0.021       0.033
+===================================================================================
+Ljung-Box (L1) (Q):                   2.53   Jarque-Bera (JB):                64.11
+Prob(Q):                              0.11   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.75   Skew:                            -1.19
+Prob(H) (two-sided):                  0.29   Kurtosis:                         4.95
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+============================================================
+
+ARIMA Model Summary - Monthly Anti-Diabetic Drug Sales in Australia (a10 - Log Scale)
+============================================================
+Data: Monthly Anti-Diabetic Drug Sales in Australia (a10 - Log Scale)
+Date range: 1991-07-01 00:00:00 to 2005-01-01 00:00:00
+Number of observations: 163
+AR order (p): 0
+Differencing order (d): 1
+MA order (q): 2
+Model: ARIMA(0, 1, 2)
+============================================================
+                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:              log_value   No. Observations:                  163
+Model:                 ARIMA(0, 1, 2)   Log Likelihood                  68.398
+Date:                Tue, 17 Nov 2026   AIC                           -130.797
+Time:                        09:35:12   BIC                           -121.534
+Sample:                    07-01-1991   HQIC                          -127.036
+                         - 01-01-2005                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ma.L1         -0.4707      0.095     -4.955      0.000      -0.657      -0.285
+ma.L2         -0.2607      0.118     -2.215      0.027      -0.491      -0.030
+sigma2         0.0251      0.003      9.432      0.000       0.020       0.030
+===================================================================================
+Ljung-Box (L1) (Q):                   0.26   Jarque-Bera (JB):                44.53
+Prob(Q):                              0.61   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.86   Skew:                            -0.94
+Prob(H) (two-sided):                  0.57   Kurtosis:                         4.75
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+============================================================
+
+ARIMA Model Summary - Monthly Anti-Diabetic Drug Sales in Australia (a10 - Log Scale)
+============================================================
+Data: Monthly Anti-Diabetic Drug Sales in Australia (a10 - Log Scale)
+Date range: 1991-07-01 00:00:00 to 2005-01-01 00:00:00
+Number of observations: 163
+AR order (p): 1
+Differencing order (d): 1
+MA order (q): 1
+Model: ARIMA(1, 1, 1)
+============================================================
+                               SARIMAX Results                                
+==============================================================================
+Dep. Variable:              log_value   No. Observations:                  163
+Model:                 ARIMA(1, 1, 1)   Log Likelihood                  68.524
+Date:                Tue, 17 Nov 2026   AIC                           -131.049
+Time:                        09:35:13   BIC                           -121.786
+Sample:                    07-01-1991   HQIC                          -127.288
+                         - 01-01-2005                                         
+Covariance Type:                  opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1          0.3594      0.190      1.889      0.059      -0.013       0.732
+ma.L1         -0.8291      0.104     -7.960      0.000      -1.033      -0.625
+sigma2         0.0250      0.003      9.584      0.000       0.020       0.030
+===================================================================================
+Ljung-Box (L1) (Q):                   0.26   Jarque-Bera (JB):                69.89
+Prob(Q):                              0.61   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.83   Skew:                            -1.13
+Prob(H) (two-sided):                  0.51   Kurtosis:                         5.30
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+============================================================
